@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Icon version="1" frameRate="0" width="168" height="168" screenWidth="1080" resDensity="480" extraResourcesDensity="320,440,480,640" extraResources="sw1536-den320:den440:1,sw1200-den320:den320:1" extraScaleByDensity="320:0.7262,440:1" extraScales="sw1536-den320:1,sw1200-den320:0.7262" useVariableUpdater="DateTime.Minute">
+	<Var name="hour_angle_raw" expression="#hour12*30+#minute/2"/>
+	<Var name="minute_angle_raw" expression="#minute*6"/>
+	<Image x="84" y="84" align="center" alignV="center" src="bg.png" />
+	<Rectangle x="84" y="42" w="2" h="43" align="center" pivotX="1" pivotY="42" fillColor="#ff4848" cornerRadius="1" rotation="#minute_angle_raw" antiAlias="true" />
+	<Rectangle x="84" y="52" w="4" h="33" align="center" pivotX="2" pivotY="32" fillColor="#ffffff" cornerRadius="2" rotation="#hour_angle_raw" antiAlias="true" />
+</Icon>
