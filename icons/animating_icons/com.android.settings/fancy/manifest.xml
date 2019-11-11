@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Icon version="1" frameRate="0" width="168" height="168" screenWidth="1080" resDensity="480" extraResourcesDensity="320,440,480,640" extraResources="sw1536-den320:den440:1,sw1200-den320:den320:1" extraScaleByDensity="320:0.7262,440:1" extraScales="sw1536-den320:1,sw1200-den320:0.7262">
+    <ExternalCommands>
+        <!-- 首次使用主题、解锁、返回桌面连续按home键切屏时，将动画播放到最后一帧 -->
+        <Trigger action="init,present,back_home_cancel" >
+            <VariableCommand name="useQuietImage" expression="1"/>
+            <AnimationCommand target="iconAni" targetIndex="0" command="play(400,400)"/>
+            <AnimationCommand target="iconAni" targetIndex="1" command="play(2600,2600)"/>
+        </Trigger>
+    	<!-- 退出APP返回桌面的瞬间 -->
+    	<Trigger action="back_home_start">
+            <VariableCommand name="useQuietImage" expression="0"/>
+            <AnimationCommand target="iconAni" targetIndex="0" command="play(0,0)"/>
+            <AnimationCommand target="iconAni" targetIndex="1" command="play(1000,1000)"/>
+    	</Trigger>
+    	<!-- 退出APP回到桌面 -->
+        <Trigger action="back_home_finish">
+            <VariableCommand name="useQuietImage" expression="0"/>
+            <!-- 动画部分 -->
+            <AnimationCommand target="iconAni" targetIndex="0" command="play(0,400)"/>
+            <AnimationCommand target="iconAni" targetIndex="1" command="play(1000,2600)"/>
+            <!-- 动态帧率 -->
+            <AnimationCommand target="panel_framerate_controller" command="play"/>
+        </Trigger>
+    </ExternalCommands>
+	<FramerateController name="panel_framerate_controller" initPause="true" loop="false">
+        <ControlPoint frameRate="0" time="0"/>
+        <ControlPoint frameRate="60" time="1"/>
+        <ControlPoint frameRate="60" time="2000"/>
+        <ControlPoint frameRate="0" time="2001"/>
+    </FramerateController>
+	<Array count="2" indexName="__i">
+		<Var name="iconAni" size="2" index="#__i" type="number[]" >
+			<VariableAnimation name="iconAnimation" initPause="true" loop="false">
+				<AniFrame value="0" time="0" easeType="ExpoeaseOut" />
+				<AniFrame value="1" time="400" />
+				<AniFrame value="0" time="1000" easeType="CubiceaseIn" />
+				<AniFrame value="40" time="1200" easeType="QuinteaseOut" />
+				<AniFrame value="120" time="2600" />
+				<Triggers>
+					<Trigger action="end" condition="#iconAnimation.current_frame == 2600">
+						<VariableCommand name="useQuietImage" expression="1"/>
+					</Trigger>
+				</Triggers>
+			</VariableAnimation>
+		</Var>
+	</Array>
+	<Image src="bg.png" x="84" y="84" align="center" alignV="center" />
+	<Image src="shape.png" name="shape" x="84" y="84" align="center" alignV="center" angle="-120+#iconAni[1]" scale="1.2-0.2*#iconAni[0]" pivotX="#shape.bmp_width/2" pivotY="#shape.bmp_height/2" />
+</Icon>
