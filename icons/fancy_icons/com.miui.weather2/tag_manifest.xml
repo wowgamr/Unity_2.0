@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- weather -->
+<Icon version="1" frameRate="0" width="168" height="168" screenWidth="1080" resDensity="480" extraResourcesDensity="320,440,480,640" extraResources="sw1536-den320:den440:1,sw1200-den320:den320:1" extraScaleByDensity="320:0.7262,440:1" extraScales="sw1536-den320:1,sw1200-den320:0.7262" useVariableUpdater="DateTime.Day">
+    <VariableBinders>
+        <ContentProviderBinder
+            name="weather_provider"
+            uri="content://weather/actualWeatherData/1"
+            columns="city_name,weather_type,temperature,city_id,aqilevel,publish_time"
+            countName="hasweather">
+            <Variable name="weather_location" type="string" column="city_name"/>
+            <Variable name="weather_id" type="int" column="weather_type"/>
+            <Variable name="weather_temperature1" type="int" column="temperature"/>
+            <Variable name="weather_temperature_str" type="string" column="temperature"/>
+            <Variable name="temperature_unit" type="int" column="temperature_unit"/>
+            <Variable name="city_id" type="string" column="city_id"/>
+            <Variable name="aqi" type="int" column="aqilevel"/>
+            <Variable name="weather_publish_time1" type="int" column="publish_time"/>
+        </ContentProviderBinder>
+        <ContentProviderBinder
+            name="weather_provider2"
+            uri="content://weather/weather"
+            columns="city_name,weather_type,temperature,city_id,aqilevel,publish_time"
+            countName="hasweather">
+            <Variable name="weather_location2" type="string" column="city_name"/>
+            <Variable name="weather_id2" type="int" column="weather_type"/>
+            <Variable name="weather_temperature2" type="int" column="temperature"/>
+            <Variable name="weather_temperature_str2" type="string" column="temperature"/>
+            <Variable name="temperature_unit2" type="int" column="temperature_unit"/>
+            <Variable name="city_id2" type="string" column="city_id"/>
+            <Variable name="aqi2" type="int" column="aqilevel"/>
+            <Variable name="weather_publish_time2" type="int" column="publish_time"/>
+        </ContentProviderBinder>
+    </VariableBinders>
+    <ExternalCommands>
+        <!-- 首次使用主题、解锁、返回桌面连续按home键切屏时，将动画播放到最后一帧 -->
+        <Trigger action="init,present,back_home_cancel" >
+            <AnimationCommand target="panel_framerate_controller" command="play"/>
+            <BinderCommand name="weather_provider" command="refresh" />
+            <BinderCommand name="weather_provider2" command="refresh" />
+        </Trigger>
+    	<!-- 退出APP返回桌面的瞬间 -->
+    	<Trigger action="back_home_start">
+            <AnimationCommand target="panel_framerate_controller" command="play"/>
+            <BinderCommand name="weather_provider" command="refresh" />
+            <BinderCommand name="weather_provider2" command="refresh" />
+    	</Trigger>
+    	<!-- 退出APP回到桌面 -->
+        <Trigger action="back_home_finish">
+            <AnimationCommand target="panel_framerate_controller" command="play"/>
+            <BinderCommand name="weather_provider" command="refresh" />
+            <BinderCommand name="weather_provider2" command="refresh" />
+        </Trigger>
+    </ExternalCommands>
+	<FramerateController name="panel_framerate_controller" initPause="true" loop="false">
+        <ControlPoint frameRate="0" time="0"/>
+        <ControlPoint frameRate="20" time="1"/>
+        <ControlPoint frameRate="20" time="99"/>
+        <ControlPoint frameRate="0" time="100"/>
+    </FramerateController>
+	<Var name="weather_temperature" expression="ifelse(#weather_publish_time1,#weather_temperature1,#weather_temperature2)" />
+	<Var name="weather_publish_time" expression="max(#weather_publish_time1,#weather_publish_time2)" />
+   <Image x="84" y="84" align="center" alignV="center" src="bg.png"/>
+   <Group x="ifelse(#weather_temperature{0,#temp_m.bmp_width/2,0)" visibility="#weather_publish_time!=0">
+	   <ImageNumber name="temp_num" x="63" y="108" align="center" alignV="center" src="num.png" number="abs(#weather_temperature)" space="2" />
+	   <Image name="temp_m" x="63+4+#temp_num.bmp_width/2+2*(len(abs(#weather_temperature))==1)" y="108-#temp_num.bmp_height/2" src="num_d.png" />
+	   <Image x="63-2-#temp_num.bmp_width/2" y="108" align="right" alignV="center" src="num_m.png" visibility="#weather_temperature{0"/>
+   </Group>
+</Icon>
