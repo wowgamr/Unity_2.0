@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- calendar -->
+
+<Icon extraResources="sw1536-den320:den440:1,sw1200-den320:den320:1" extraResourcesDensity="320,440,480,640" extraScaleByDensity="320:0.7262,440:1" extraScales="sw1536-den320:1,sw1200-den320:0.7262" frameRate="0" height="168" resDensity="480" screenWidth="1080" useVariableUpdater="DateTime.Day" version="1" width="168">
+  <VariableBinders>
+    <BroadcastBinder action="android.intent.action.TIME_SET"/>
+    <BroadcastBinder action="android.intent.action.DATE_CHANGED"/>
+  </VariableBinders>
+    <ExternalCommands>
+        <!-- 首次使用主题、解锁、返回桌面连续按home键切屏时，将动画播放到最后一帧 -->
+        <Trigger action="init,present,back_home_cancel" >
+            <AnimationCommand target="panel_framerate_controller" command="play"/>
+        </Trigger>
+    	<!-- 退出APP返回桌面的瞬间 -->
+    	<Trigger action="back_home_start">
+            <AnimationCommand target="panel_framerate_controller" command="play"/>
+    	</Trigger>
+    	<!-- 退出APP回到桌面 -->
+        <Trigger action="back_home_finish">
+            <AnimationCommand target="panel_framerate_controller" command="play"/>
+        </Trigger>
+    </ExternalCommands>
+	<FramerateController name="panel_framerate_controller" initPause="true" loop="false">
+        <ControlPoint frameRate="0" time="0"/>
+        <ControlPoint frameRate="20" time="1"/>
+        <ControlPoint frameRate="20" time="99"/>
+        <ControlPoint frameRate="0" time="100"/>
+    </FramerateController>
+	<Image align="center" alignV="center" src="calendar_icon.png" srcid="#date" x="84" y="84"/>
+	<Group pivotX="84" pivotY="38" scale="min(140/#dt.text_width,1)">
+		<DateTime name="dt" x="84" align="center" y="38" alignV="center" size="26" fontFamily="miui-bold" color="#000000" alpha="186" format="EE"/>
+	</Group>
+
+</Icon>
